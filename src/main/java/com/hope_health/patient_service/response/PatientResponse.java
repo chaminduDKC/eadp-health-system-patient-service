@@ -14,4 +14,9 @@ public class PatientResponse {
     private String userId;
     private String name;
     private String email;
+    private String address;
+    private String age;
+    private String gender;
+    private String phone;
+    // complete response including address, phone number, etc. can be added later
 }

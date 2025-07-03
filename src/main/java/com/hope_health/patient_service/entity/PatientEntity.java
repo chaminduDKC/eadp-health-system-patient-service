@@ -23,4 +23,9 @@ public class PatientEntity {
 
     @Column(name = "user_id")
     private String userId; // for user service
+
+    private String address;
+    private String age;
+    private String gender;
+    private String phone;
 }

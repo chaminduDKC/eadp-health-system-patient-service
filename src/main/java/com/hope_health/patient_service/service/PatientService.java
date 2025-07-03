@@ -15,7 +15,7 @@ public interface PatientService {
 
     PatientResponse updatePatient(PatientRegisterRequest request, String patientId);
 
-    void deletePatientById(String patientId);
+    void deletePatientByUserId(String userId);
 
     PatientResponsePaginated findAllPatients(String searchText, int page, int size);
 }

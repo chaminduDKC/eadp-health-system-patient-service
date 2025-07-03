@@ -41,18 +41,28 @@ public class PatientServiceImpl implements PatientService {
                 .name(entity.getName())
                 .email(entity.getEmail())
                 .userId(entity.getUserId())
+                .address(entity.getAddress())
+                .age(entity.getAge())
+                .phone(entity.getPhone())
+                .gender(entity.getGender())
                 .build();
     }
 
     @Override
-    public PatientResponse updatePatient(PatientRegisterRequest request, String patientId) {
-        PatientEntity existingPatient = patientRepo.findById(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientId));
+    public PatientResponse updatePatient(PatientRegisterRequest request, String userId) {
+        PatientEntity existingPatient = patientRepo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + userId));
+
+        String patientId = existingPatient.getPatientId();
 
         existingPatient.setPatientId(patientId);
         existingPatient.setName(request.getName());
         existingPatient.setEmail(request.getEmail());
-        existingPatient.setUserId(request.getUserId());
+        existingPatient.setUserId(userId);
+        existingPatient.setAddress(request.getAddress());
+        existingPatient.setAge(request.getAge());
+        existingPatient.setGender(request.getGender());
+        existingPatient.setPhone(request.getPhone());
 
         patientRepo.save(existingPatient);
 
@@ -60,15 +70,23 @@ public class PatientServiceImpl implements PatientService {
                 existingPatient.getPatientId(),
                 existingPatient.getName(),
                 existingPatient.getEmail(),
-                existingPatient.getUserId()
+                existingPatient.getUserId(),
+                existingPatient.getAddress(),
+                existingPatient.getAge(),
+                existingPatient.getGender(),
+                existingPatient.getPhone()
         );
     }
 
     @Override
-    public void deletePatientById(String patientId) {
-        if (!patientRepo.existsById(patientId)) {
-            throw new RuntimeException("Patient not found with id: " + patientId);
+    public void deletePatientByUserId(String userId) {
+        if (!patientRepo.existsByUserId(userId)) {
+            throw new RuntimeException("Patient not found with id: " + userId);
         }
+        PatientEntity patient = patientRepo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Patient not found with userId: " + userId));
+
+        String patientId = patient.getPatientId();
         patientRepo.deleteById(patientId);
     }
 
@@ -86,6 +104,10 @@ public class PatientServiceImpl implements PatientService {
                 .patientId(patientEntity.getPatientId())
                 .name(patientEntity.getName())
                 .email(patientEntity.getEmail())
+                .address(patientEntity.getAddress())
+                .age(patientEntity.getAge())
+                .phone(patientEntity.getPhone())
+                .gender(patientEntity.getGender())
                 .userId(patientEntity.getUserId())
                 .build();
     }
@@ -102,6 +124,10 @@ public class PatientServiceImpl implements PatientService {
     private PatientEntity toEntity(PatientRegisterRequest request) {
        return PatientEntity.builder()
                 .patientId(UUID.randomUUID().toString())
+                .age(request.getAge())
+                .address(request.getAddress())
+                .phone(request.getPhone())
+                .gender(request.getGender())
                 .name(request.getName())
                 .email(request.getEmail())
                 .userId(request.getUserId())

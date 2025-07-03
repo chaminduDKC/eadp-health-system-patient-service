@@ -66,15 +66,16 @@ public class PatientController {
         );
     }
 
-    @DeleteMapping("/delete-patient/{patientId}")
+    @DeleteMapping("/delete-patient/{userId}")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<StandardResponse> deletePatientById(@PathVariable String patientId) {
-        patientService.deletePatientById(patientId);
+    public ResponseEntity<StandardResponse> deletePatientByUserId(@PathVariable String userId) {
+        System.out.println("Deleting patient with userId: " + userId);
+        patientService.deletePatientByUserId(userId);
         return new ResponseEntity<>(
                 StandardResponse.builder()
                         .code(200)
-                        .message("Patient deleted successfully with id: " + patientId)
-                        .data(null)
+                        .message("Patient deleted successfully with id: " + userId)
+                        .data("delete with userId " + userId)
                         .build(),
                 HttpStatus.OK
         );

@@ -18,9 +18,11 @@ public interface PatientRepo extends JpaRepository<PatientEntity, String> {
     Optional<PatientEntity> findByUserId(String userId);
     boolean existsByUserId(String userId);
 
-    @Query(value = "SELECT COUNT(patient_id) FROM patients WHERE name LIKE %?1% OR email LIKE %?1%", nativeQuery = true)
+    @Query(value = "SELECT COUNT(patient_id) FROM patient WHERE name LIKE %?1% OR email LIKE %?1%", nativeQuery = true)
     long countAll(String searchText);
 
-    @Query(value = "SELECT * FROM patients WHERE name LIKE %?1% OR email LIKE %?1%", nativeQuery = true)
+    @Query(value = "SELECT * FROM patient WHERE name LIKE %?1% OR email LIKE %?1%", nativeQuery = true)
     List<PatientEntity> searchAll(String searchText, Pageable pageable);
+
+    void deleteByUserId(String userId);
 }
