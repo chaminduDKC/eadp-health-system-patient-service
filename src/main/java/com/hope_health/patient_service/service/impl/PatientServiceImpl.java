@@ -1,5 +1,6 @@
 package com.hope_health.patient_service.service.impl;
 
+import com.hope_health.patient_service.config.WebClientConfig;
 import com.hope_health.patient_service.entity.PatientEntity;
 import com.hope_health.patient_service.repo.PatientRepo;
 import com.hope_health.patient_service.request.PatientRegisterRequest;
@@ -7,9 +8,11 @@ import com.hope_health.patient_service.response.PatientRegisterResponse;
 import com.hope_health.patient_service.response.PatientResponse;
 import com.hope_health.patient_service.response.PatientResponsePaginated;
 import com.hope_health.patient_service.service.PatientService;
+import com.hope_health.patient_service.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 
 import java.util.UUID;
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepo patientRepo;
+    private final WebClientConfig webClientConfig;
 
     @Override
     public PatientRegisterResponse createPatient(PatientRegisterRequest request) {
@@ -88,6 +92,13 @@ public class PatientServiceImpl implements PatientService {
 
         String patientId = patient.getPatientId();
         patientRepo.deleteById(patientId);
+        try{
+            webClientConfig.webClient().delete()
+                    .uri("http://localhost:9093/api/bookings/delete-booking-by-patient/{patientId}", patientId)
+                    .retrieve().bodyToMono(StandardResponse.class).block();
+        } catch (WebClientException e) {
+            throw new RuntimeException("Failed to delete from booking service "+e);
+        }
     }
 
     @Override
