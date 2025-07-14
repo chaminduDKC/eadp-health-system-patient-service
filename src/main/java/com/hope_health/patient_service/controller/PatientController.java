@@ -94,4 +94,16 @@ public class PatientController {
         );
     }
 
+    @GetMapping("/countAll")
+    public ResponseEntity<StandardResponse> countAllPatients() {
+        return new ResponseEntity<>(
+                StandardResponse.builder()
+                        .code(200)
+                        .message("Count of all patients retrieved")
+                        .data(patientService.countAllPatients())
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
 }

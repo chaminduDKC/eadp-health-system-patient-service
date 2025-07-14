@@ -110,6 +110,11 @@ public class PatientServiceImpl implements PatientService {
                 .build();
     }
 
+    @Override
+    public long countAllPatients() {
+        return patientRepo.countAll("");
+    }
+
     private PatientResponse toResponse(PatientEntity patientEntity) {
         return PatientResponse.builder()
                 .patientId(patientEntity.getPatientId())

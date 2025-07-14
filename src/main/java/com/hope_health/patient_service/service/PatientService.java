@@ -18,4 +18,6 @@ public interface PatientService {
     void deletePatientByUserId(String userId);
 
     PatientResponsePaginated findAllPatients(String searchText, int page, int size);
+
+    long countAllPatients();
 }
