@@ -20,4 +20,10 @@ public interface PatientService {
     PatientResponsePaginated findAllPatients(String searchText, int page, int size);
 
     long countAllPatients();
+
+
+
+    Boolean updateEmail(String userId, String email);
+
+    PatientResponse getPatientByEmail(String email);
 }

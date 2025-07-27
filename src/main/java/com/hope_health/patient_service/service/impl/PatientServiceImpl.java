@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientException;
 
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -57,12 +58,7 @@ public class PatientServiceImpl implements PatientService {
         PatientEntity existingPatient = patientRepo.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Patient not found with id: " + userId));
 
-        String patientId = existingPatient.getPatientId();
-
-        existingPatient.setPatientId(patientId);
         existingPatient.setName(request.getName());
-        existingPatient.setEmail(request.getEmail());
-        existingPatient.setUserId(userId);
         existingPatient.setAddress(request.getAddress());
         existingPatient.setAge(request.getAge());
         existingPatient.setGender(request.getGender());
@@ -114,6 +110,31 @@ public class PatientServiceImpl implements PatientService {
     public long countAllPatients() {
         return patientRepo.countAll("");
     }
+
+    @Override
+    public Boolean updateEmail(String userId, String email) {
+        Optional<PatientEntity> patientEntity = patientRepo.findByUserId(userId);
+        if(patientEntity.isPresent()) {
+            patientEntity.get().setEmail(email);
+            patientRepo.save(patientEntity.get());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public PatientResponse getPatientByEmail(String email) {
+    Optional<PatientEntity> patientEntity = patientRepo.findByEmail(email);
+    if(patientEntity.isPresent()){
+        PatientEntity entity = patientEntity.get();
+        return PatientResponse.builder()
+                .name(entity.getName())
+                .patientId(entity.getPatientId())
+                .build();
+    }
+        throw new RuntimeException("Patient not found with email: " + email);
+    }
+
 
     private PatientResponse toResponse(PatientEntity patientEntity) {
         return PatientResponse.builder()

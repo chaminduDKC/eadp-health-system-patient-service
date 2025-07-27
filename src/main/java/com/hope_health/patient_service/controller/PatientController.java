@@ -54,6 +54,19 @@ public class PatientController {
         );
     }
 
+    @GetMapping("/find-patient-by-email/{email}")
+    @PreAuthorize("hasRole('admin') or hasRole('doctor') or hasRole('patient')")
+    public ResponseEntity<StandardResponse> getPatientByEmail(@PathVariable String email) {
+        return new ResponseEntity<>(
+                StandardResponse.builder()
+                        .code(200)
+                        .message("Patient retrieved successfully")
+                        .data(patientService.getPatientByEmail(email))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
     @PutMapping("/update-patient/{patientId}")
     public ResponseEntity<StandardResponse> updatePatient(@RequestBody PatientRegisterRequest request, @PathVariable String patientId) {
         return new ResponseEntity<>(
@@ -101,6 +114,20 @@ public class PatientController {
                         .code(200)
                         .message("Count of all patients retrieved")
                         .data(patientService.countAllPatients())
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+
+
+    @PutMapping("/update-email/{userId}")
+    public ResponseEntity<StandardResponse> updateEmail(@RequestBody String email, @PathVariable String userId){
+        return new ResponseEntity<>(
+                StandardResponse.builder()
+                        .code(200)
+                        .message("email updated password")
+                        .data(patientService.updateEmail(userId, email))
                         .build(),
                 HttpStatus.OK
         );
