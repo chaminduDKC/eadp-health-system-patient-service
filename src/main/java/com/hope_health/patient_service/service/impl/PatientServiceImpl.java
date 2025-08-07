@@ -39,7 +39,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientResponse getPatientById(String patientId) {
         PatientEntity entity = patientRepo.findById(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientId));
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
 
         return PatientResponse.builder()
                 .patientId(entity.getPatientId())
@@ -81,10 +81,10 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void deletePatientByUserId(String userId) {
         if (!patientRepo.existsByUserId(userId)) {
-            throw new RuntimeException("Patient not found with id: " + userId);
+            throw new RuntimeException("Patient not found");
         }
         PatientEntity patient = patientRepo.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with userId: " + userId));
+                .orElseThrow(() -> new RuntimeException("Patient not found "));
 
         String patientId = patient.getPatientId();
         patientRepo.deleteById(patientId);
@@ -130,6 +130,7 @@ public class PatientServiceImpl implements PatientService {
         return PatientResponse.builder()
                 .name(entity.getName())
                 .patientId(entity.getPatientId())
+                .userId(entity.getUserId())
                 .build();
     }
         throw new RuntimeException("Patient not found with email: " + email);
