@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "patient")
 @AllArgsConstructor
@@ -28,4 +30,6 @@ public class PatientEntity {
     private String age;
     private String gender;
     private String phone;
+    @Column(name = "created_date")
+    private LocalDate createdDate;
 }

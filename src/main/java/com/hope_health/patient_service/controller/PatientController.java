@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RequestMapping("/api/patients")
 @RestController
 @RequiredArgsConstructor
@@ -128,6 +130,34 @@ public class PatientController {
                         .code(200)
                         .message("email updated password")
                         .data(patientService.updateEmail(userId, email))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/find-patients-by-month")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<StandardResponse> getPatientsByMonth(@RequestParam int NumberOfMonth){
+        System.out.println("Coming");
+        return new ResponseEntity<>(
+                StandardResponse.builder()
+                        .code(200)
+                        .message("patients by month")
+                        .data(patientService.getPatientsByMonth(NumberOfMonth))
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/find-patients-by-date")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<StandardResponse> getPatientsByDate(){
+        System.out.println("Coming");
+        return new ResponseEntity<>(
+                StandardResponse.builder()
+                        .code(200)
+                        .message("patients by date")
+                        .data(patientService.getPatientsByDate())
                         .build(),
                 HttpStatus.OK
         );

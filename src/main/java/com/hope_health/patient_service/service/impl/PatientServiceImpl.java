@@ -4,6 +4,7 @@ import com.hope_health.patient_service.config.WebClientConfig;
 import com.hope_health.patient_service.entity.PatientEntity;
 import com.hope_health.patient_service.repo.PatientRepo;
 import com.hope_health.patient_service.request.PatientRegisterRequest;
+import com.hope_health.patient_service.request.PatientStatisticResponse;
 import com.hope_health.patient_service.response.PatientRegisterResponse;
 import com.hope_health.patient_service.response.PatientResponse;
 import com.hope_health.patient_service.response.PatientResponsePaginated;
@@ -15,8 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientException;
 
 
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -136,6 +138,35 @@ public class PatientServiceImpl implements PatientService {
         throw new RuntimeException("Patient not found with email: " + email);
     }
 
+    @Override
+    public List<PatientStatisticResponse> getPatientsByMonth(int numberOfMonths) {
+        List<PatientStatisticResponse> stats = new ArrayList<>();
+        int monthNumber = 0;
+       for (int i = numberOfMonths; i > 0; i--) {
+           YearMonth month = YearMonth.now().minusMonths(monthNumber);
+           String monthString = YearMonth.now().minusMonths(monthNumber).getMonth().toString();
+           int patientCount = patientRepo.findByMonth(month);
+           System.out.println(monthString);
+           System.out.println(month);
+           stats.add(PatientStatisticResponse.builder().patients(patientCount).month(monthString).build());
+           monthNumber++;
+       }
+       Collections.reverse(stats);
+       return stats;
+    }
+
+    @Override
+    public List<Integer> getPatientsByDate() {
+        List<Integer> statList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            LocalDate date = LocalDate.now().minusDays(i);
+            int patientCount = patientRepo.findByDate(date);
+            statList.add(patientCount);
+        }
+        Collections.reverse(statList);
+        return statList;
+    }
+
 
     private PatientResponse toResponse(PatientEntity patientEntity) {
         return PatientResponse.builder()
@@ -169,6 +200,7 @@ public class PatientServiceImpl implements PatientService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .userId(request.getUserId())
+                .createdDate(request.getCreatedDate())
                 .build();
     }
 }

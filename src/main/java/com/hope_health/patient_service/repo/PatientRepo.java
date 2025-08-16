@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -25,4 +28,10 @@ public interface PatientRepo extends JpaRepository<PatientEntity, String> {
     List<PatientEntity> searchAll(String searchText, Pageable pageable);
 
     void deleteByUserId(String userId);
+
+    @Query(value = "SELECT COUNT(patient_id) FROM patient WHERE created_date LIKE %?1% ", nativeQuery = true)
+    int findByMonth(YearMonth month);
+
+    @Query(nativeQuery = true, value = "SELECT COUNT(patient_id) FROM patient WHERE created_date LIKE %?1%")
+    int findByDate(LocalDate date);
 }

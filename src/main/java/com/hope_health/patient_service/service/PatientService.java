@@ -1,6 +1,7 @@
 package com.hope_health.patient_service.service;
 
 import com.hope_health.patient_service.request.PatientRegisterRequest;
+import com.hope_health.patient_service.request.PatientStatisticResponse;
 import com.hope_health.patient_service.response.PatientRegisterResponse;
 import com.hope_health.patient_service.response.PatientResponse;
 import com.hope_health.patient_service.response.PatientResponsePaginated;
@@ -21,9 +22,11 @@ public interface PatientService {
 
     long countAllPatients();
 
-
-
     Boolean updateEmail(String userId, String email);
 
     PatientResponse getPatientByEmail(String email);
+
+    List<PatientStatisticResponse> getPatientsByMonth(int number);
+
+    List<Integer> getPatientsByDate();
 }
