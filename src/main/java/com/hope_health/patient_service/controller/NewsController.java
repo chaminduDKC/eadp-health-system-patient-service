@@ -50,7 +50,6 @@ public class NewsController {
     }
 
     @GetMapping("/find-all news")
-    @PreAuthorize("hasRole('admin')")
     public ResponseEntity<StandardResponse> allNews(){
         return new ResponseEntity<>(StandardResponse.builder()
                 .code(200)

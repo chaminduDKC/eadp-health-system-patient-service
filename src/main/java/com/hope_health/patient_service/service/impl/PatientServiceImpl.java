@@ -130,7 +130,12 @@ public class PatientServiceImpl implements PatientService {
     if(patientEntity.isPresent()){
         PatientEntity entity = patientEntity.get();
         return PatientResponse.builder()
+                .age(entity.getAge())
+                .gender(entity.getGender())
+                .phone(entity.getPhone())
+                .address(entity.getAddress())
                 .name(entity.getName())
+                .email(entity.getEmail())
                 .patientId(entity.getPatientId())
                 .userId(entity.getUserId())
                 .build();
